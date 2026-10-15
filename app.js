@@ -111,13 +111,15 @@ let weak=PLAN.filter(p=>state[p.d].mis).slice(-8).reverse();
 document.getElementById("weakList").innerHTML=weak.length?weak.map(p=>`<div>• <b>D${p.d}</b> — ${state[p.d].mis}</div>`).join(""):"<span>No mistakes logged yet. Add in Tracker → Mistakes.</span>";
 }
 
-function renderDays(){
-const fp=document.getElementById("fPhase").value,fs=document.getElementById("fStatus").value,q=document.getElementById("fSearch").value.toLowerCase();
-const box=document.getElementById("days");let n=0;
-box.innerHTML=PLAN.filter(p=>(!fp||p.ph===fp)&&(!fs||state[p.d].status===fs)&&(!q||(p.govt+p.py+p.dsa+p.ai+p.proj).toLowerCase().includes(q))).map(p=>{
-n++;const s=state[p.d];
-return `<div class="day"><div class="day-head"><div><span class="badge ${phaseClass(p.ph)}">${p.ph}</span> <b>Day ${p.d}</b> <span class="small">${p.done}</span></div><select data-k="status" data-d="${p.d}" style="border:1px solid var(--line);border-radius:8px;padding:6px;background:var(--card);color:var(--ink)">${["Pending","In Progress","Done","Skipped"].map(o=>`<option ${s.status===o?"selected":""}>${o}</option>`).join("")}</select></div>
-<div class="day-body"><div><ul><li><b>Govt:</b> ${p.govt}</li><li><b>Python:</b> ${p.py}</li><li><b>DSA (${p.dn}):</b> ${p.dsa}</li><li><b>AI:</b> ${p.ai} | <b>Project:</b> ${p.proj}</li></ul></div>
+let viewMode="single", selDay=1, selWeek="W1", collapseAll=false;
+function getToday(){const t=PLAN.find(p=>state[p.d].status!=="Done");return t?t.d:60}
+function weekRange(w){const m={W1:[1,7],W2:[8,14],W3:[15,21],W4:[22,28],W5:[29,35],W6:[36,42],W7:[43,49],W8:[50,56],W9:[57,60]};return m[w]||[1,7]}
+
+function dayCard(p, open){
+const s=state[p.d];
+const summary=`<span class="small">${p.govt.slice(0,60)}… | ${state[p.d].status}</span>`;
+return `<details class="day" ${open?"open":""}><summary class="day-head" style="cursor:pointer;list-style:none"><div><span class="badge ${phaseClass(p.ph)}">${p.ph}</span> <b>Day ${p.d}</b> <span class="small">${p.done}</span><br/>${open?"":summary}</div><select data-k="status" data-d="${p.d}" style="border:1px solid var(--line);border-radius:8px;padding:6px;background:var(--card);color:var(--ink)" onclick="event.stopPropagation()" onchange="event.stopPropagation()">${["Pending","In Progress","Done","Skipped"].map(o=>`<option ${s.status===o?"selected":""}>${o}</option>`).join("")}</select></summary>
+<div class="day-body"><div><ul><li><b>Govt:</b> ${p.govt}</li><li><b>Python:</b> ${p.py}</li><li><b>DSA (${p.dn}):</b> ${p.dsa}</li><li><b>AI:</b> ${p.ai} | <b>Project:</b> ${p.proj}</li></ul><div class="toolbar"><button class="btn ghost" onclick="markDone(${p.d})">✅ Mark Done + Next</button></div></div>
 <div class="inputs">
 <label>Actual hrs<input type="number" min="0" max="14" step="0.5" data-k="hrs" data-d="${p.d}" value="${s.hrs}"/></label>
 <label>Attempted<input type="number" min="0" data-k="att" data-d="${p.d}" value="${s.att}"/></label>
@@ -127,19 +129,45 @@ return `<div class="day"><div class="day-head"><div><span class="badge ${phaseCl
 <label>Confidence 1-5<select data-k="conf" data-d="${p.d}"><option value="">—</option>${[1,2,3,4,5].map(o=>`<option ${s.conf==o?"selected":""}>${o}</option>`).join("")}</select></label>
 <label style="grid-column:1/-1">Mistakes / weak areas<input data-k="mis" data-d="${p.d}" value="${(s.mis||"").replace(/"/g,"&quot;")}" placeholder="e.g. DI calc slow | silly sign error"/></label>
 <label style="grid-column:1/-1">Next day priority<input data-k="next" data-d="${p.d}" value="${(s.next||"").replace(/"/g,"&quot;")}" placeholder="e.g. Revise Time-Work + Binary Search"/></label>
-</div></div></div>`}).join("");
-document.getElementById("countTxt").textContent=n+"/60 days shown • Tip: update daily 5:15pm, Export CSV weekly";
+</div></div></details>`}
+
+function markDone(d){state[d].status="Done";save();if(d<60){selDay=d+1;const vd=document.getElementById("vDay");if(vd)vd.value=String(selDay)}renderDays();window.scrollTo({top:0,behavior:"smooth"})}
+
+function renderDays(){
+const fp=document.getElementById("fPhase").value,fs=document.getElementById("fStatus").value,q=document.getElementById("fSearch").value.toLowerCase();
+const box=document.getElementById("days");
+let list=PLAN.filter(p=>(!fp||p.ph===fp)&&(!fs||state[p.d].status===fs)&&(!q||(p.govt+p.py+p.dsa+p.ai+p.proj).toLowerCase().includes(q)));
+// view mode narrowing (single/week ignore phase/status, respect search only)
+if(viewMode==="single"){list=PLAN.filter(p=>p.d===selDay&&(!q||(p.govt+p.py+p.dsa+p.ai+p.proj).toLowerCase().includes(q)))}
+if(viewMode==="week"){const[a,b]=weekRange(selWeek);list=PLAN.filter(p=>p.d>=a&&p.d<=b&&(!q||(p.govt+p.py+p.dsa+p.ai+p.proj).toLowerCase().includes(q)))}
+let n=list.length;
+if(!n){box.innerHTML="<div class='card'>No days match. Clear filters or pick another day/week.</div>";document.getElementById("countTxt").textContent="0 shown";return}
+const openDefault=viewMode!=="all"||!collapseAll;
+box.innerHTML=(viewMode==="all"&&!q?`<div class="toolbar"><span class="small">Quick jump:</span>${PLAN.map(p=>`<a href="#day-${p.d}" onclick="jumpDay(${p.d});return false" class="kbd" style="text-decoration:none"> ${p.d} </a>`).join("")}</div>`:"")+list.map(p=>`<span id="day-${p.d}"></span>`+dayCard(p, viewMode!=="all"?true:!collapseAll)).join("");
+document.getElementById("countTxt").textContent=(viewMode==="single"?`Day ${selDay}/60 • Single view — no scrolling! Use Prev/Next/Today.` : viewMode==="week"?`${selWeek} • ${n} days • Week view.` : n+"/60 days shown • Collapsible — click header to expand.")+" • Tip: update daily 5:15pm";
 box.querySelectorAll("[data-k]").forEach(el=>{el.addEventListener("change",e=>{const d=e.target.dataset.d,k=e.target.dataset.k;state[d][k]=e.target.value;save();if(k==="status")renderDays();})});
 }
+function jumpDay(d){selDay=d;viewMode="single";document.getElementById("vMode").value="single";document.getElementById("vDay").value=String(d);syncViewUI();renderDays();document.getElementById("p-tracker").scrollIntoView()}
+function syncViewUI(){document.getElementById("vDay").style.display=viewMode==="single"?"":"none";document.getElementById("vWeek").style.display=viewMode==="week"?"":"none";document.getElementById("btnPrev").style.display=viewMode==="all"?"none":"";document.getElementById("btnNext").style.display=viewMode==="all"?"none":""}
 
 document.addEventListener("DOMContentLoaded",()=>{
 document.getElementById("tabs").addEventListener("click",e=>{if(e.target.tagName!=="BUTTON")return;document.querySelectorAll("#tabs button").forEach(b=>b.classList.remove("active"));e.target.classList.add("active");document.querySelectorAll("section.page").forEach(s=>s.classList.remove("active"));document.getElementById("p-"+e.target.dataset.p).classList.add("active")});
 ["fPhase","fStatus","fSearch"].forEach(id=>document.getElementById(id).addEventListener("input",renderDays));
+// new nav controls
+const vd=document.getElementById("vDay");vd.innerHTML=PLAN.map(p=>`<option value="${p.d}">Day ${p.d} — ${p.done.slice(0,22)}</option>`).join("");
+selDay=getToday();vd.value=String(selDay);
+document.getElementById("vMode").addEventListener("change",e=>{viewMode=e.target.value;syncViewUI();renderDays()});
+vd.addEventListener("change",e=>{selDay=parseInt(e.target.value);renderDays()});
+document.getElementById("vWeek").addEventListener("change",e=>{selWeek=e.target.value;renderDays()});
+document.getElementById("btnPrev").onclick=()=>{if(viewMode==="week"){const order=["W1","W2","W3","W4","W5","W6","W7","W8","W9"];let i=Math.max(0,order.indexOf(selWeek)-1);selWeek=order[i];document.getElementById("vWeek").value=selWeek}else{selDay=Math.max(1,selDay-1);vd.value=String(selDay)}renderDays();window.scrollTo({top:0,behavior:"smooth"})};
+document.getElementById("btnNext").onclick=()=>{if(viewMode==="week"){const order=["W1","W2","W3","W4","W5","W6","W7","W8","W9"];let i=Math.min(8,order.indexOf(selWeek)+1);selWeek=order[i];document.getElementById("vWeek").value=selWeek}else{selDay=Math.min(60,selDay+1);vd.value=String(selDay)}renderDays();window.scrollTo({top:0,behavior:"smooth"})};
+document.getElementById("btnToday").onclick=()=>{selDay=getToday();vd.value=String(selDay);if(viewMode==="all"){viewMode="single";document.getElementById("vMode").value="single";syncViewUI()}renderDays();window.scrollTo({top:0,behavior:"smooth"})};
+document.getElementById("btnCollapse").onclick=(e)=>{collapseAll=!collapseAll;e.target.textContent=collapseAll?"Expand all":"Collapse all";renderDays()};
 document.getElementById("btnReset").onclick=()=>{if(confirm("Reset all 60 days progress?")){localStorage.removeItem(KEY);state=load();renderStats();renderDays()}};
 document.getElementById("themeBtn").onclick=toggleTheme;
 function download(name,text,type){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click()}
 document.getElementById("btnExportJSON").onclick=()=>download("sixty-day-tracker.json",JSON.stringify({exported:new Date().toISOString(),state,plan:PLAN},null,2),"application/json");
 document.getElementById("btnExportCSV").onclick=()=>{let rows=[["Day","Phase","Govt","Python","DSA","DSA_target","AI","Project","Status","Actual_Hrs","Attempted","Correct","Mock","DSA_solved","Confidence","Mistakes","Next"]];PLAN.forEach(p=>{const s=state[p.d];rows.push([p.d,'"'+p.ph+'"','"'+p.govt.replace(/"/g,"'")+'"','"'+p.py.replace(/"/g,"'")+'"','"'+p.dsa.replace(/"/g,"'")+'"',p.dn,'"'+p.ai+'"', '"'+p.proj+'"',s.status,s.hrs,s.att,s.cor,s.mock,s.dsa,s.conf,'"'+(s.mis||"").replace(/"/g,"'")+'"', '"'+(s.next||"").replace(/"/g,"'")+'"'])});download("sixty-day-tracker.csv",rows.map(r=>r.join(",")).join("\n"),"text/csv")};
 document.getElementById("importFile").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(j.state){state=j.state;save();renderDays();alert("Imported!")}else alert("Invalid file")}catch(err){alert("Invalid JSON")}};r.readAsText(f)});
-applyTheme();renderStats();renderDays();
+applyTheme();renderStats();syncViewUI();renderDays();
 });

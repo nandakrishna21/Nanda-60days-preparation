@@ -5,11 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>60-Day Govt Exam + Python + DSA + AI Dashboard</title>
 <link rel="stylesheet" href="./styles.css" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<meta name="theme-color" content="#2f6bff" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="apple-touch-icon" href="./icons/icon-180.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
 </head>
 <body>
 <header>
 <div><h1>60-Day Dashboard — Govt Exam + Python Full-Stack + DSA + AI</h1><p>8–10 hrs • Full-time • Beginner • APPSC Gr2 + SSC CGL + Banking + RRB • Frontend-only, auto-saves</p></div>
-<div><button class="theme-toggle" id="themeBtn">🌙 Dark</button></div>
+<div><button class="theme-toggle" id="installBtn" style="display:none;margin-right:8px">⬇️ Install App</button><button class="theme-toggle" id="themeBtn">🌙 Dark</button></div>
 </header>
 <div class="wrap">
 <div class="tabs" id="tabs">
@@ -38,6 +45,17 @@
 <select id="fPhase"><option value="">All Phases</option><option>Phase 1 (1-14)</option><option>Phase 2 (15-30)</option><option>Phase 3 (31-45)</option><option>Phase 4 (46-60)</option></select>
 <select id="fStatus"><option value="">All Status</option><option>Pending</option><option>In Progress</option><option>Done</option><option>Skipped</option></select>
 <input id="fSearch" placeholder="Search e.g. DI, React, AP, Binary Search" style="flex:1;min-width:200px" />
+</div>
+<div class="toolbar" style="background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px">
+<select id="vMode" title="View mode"><option value="single">📄 Single day</option><option value="week">📅 Week view</option><option value="all">📜 All days (scroll)</option></select>
+<button class="btn ghost" id="btnPrev">◀ Prev</button>
+<select id="vDay" title="Jump to day"></select>
+<select id="vWeek" title="Jump to week" style="display:none"><option>W1</option><option>W2</option><option>W3</option><option>W4</option><option>W5</option><option>W6</option><option>W7</option><option>W8</option><option>W9</option></select>
+<button class="btn ghost" id="btnNext">Next ▶</button>
+<button class="btn green" id="btnToday">📍 Today</button>
+<button class="btn ghost" id="btnCollapse">Collapse all</button>
+</div>
+<div class="toolbar">
 <button class="btn ghost" id="btnExportCSV">Export CSV</button>
 <button class="btn ghost" id="btnExportJSON">Export JSON</button>
 <button class="btn ghost" id="btnReset">Reset</button>
@@ -67,5 +85,24 @@
 <footer>Frontend-only • localStorage • Keep index.html + styles.css + app.js together</footer>
 </div>
 <script src="./app.js"></script>
+<script>
+// PWA: service worker + install prompt
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+}
+let deferredPrompt = null;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const b = document.getElementById("installBtn");
+  if (b) b.style.display = "inline-block";
+});
+document.getElementById("installBtn")?.addEventListener("click", async () => {
+  if (!deferredPrompt) { alert("To install: Chrome menu → Install app / Add to Home screen. iPhone: Share → Add to Home Screen."); return; }
+  deferredPrompt.prompt();
+  deferredPrompt = null;
+  document.getElementById("installBtn").style.display = "none";
+});
+</script>
 </body>
 </html>

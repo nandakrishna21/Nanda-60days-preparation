@@ -30,3 +30,19 @@ python -m http.server 5500
 ## Deploy as website (GitHub Pages)
 This repo is Pages-ready (static root = `index.html`):
 Settings → Pages → Deploy from branch → `main` / `/ (root)` → Save → open `https://nandakrishna21.github.io/Nanda-60days-preparation/`
+
+## Install as phone app (PWA)
+- `manifest.webmanifest` + `sw.js` + `icons/icon-192.png` + `icons/icon-512.png` included.
+- Desktop Chrome/Edge: address bar Install icon or header **⬇️ Install App** button.
+- Android: Chrome menu → Install app / Add to Home screen.
+- iPhone: Share → Add to Home Screen (uses `apple-touch-icon` 180px).
+- Works offline after first visit (service worker caches all files).
+
+## Custom domain setup (optional)
+1. Buy domain (e.g. `nanda60days.in`) from Cloudflare/Namecheap/GoDaddy.
+2. GitHub repo → Settings → Pages → Custom domain → enter `www.nanda60days.in` → Save (creates `CNAME`).
+3. DNS provider → add records:
+   - `CNAME` `www` → `nandakrishna21.github.io`
+   - `A` `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+4. Wait 10-60 min → check `https://www.nanda60days.in` → Enforce HTTPS in Pages settings.
+5. Keep `CNAME` file in repo root — do not delete on next push.
