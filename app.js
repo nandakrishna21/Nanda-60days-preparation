@@ -115,11 +115,49 @@ let viewMode="single", selDay=1, selWeek="W1", collapseAll=false;
 function getToday(){const t=PLAN.find(p=>state[p.d].status!=="Done");return t?t.d:60}
 function weekRange(w){const m={W1:[1,7],W2:[8,14],W3:[15,21],W4:[22,28],W5:[29,35],W6:[36,42],W7:[43,49],W8:[50,56],W9:[57,60]};return m[w]||[1,7]}
 
+function yt(q){return "https://www.youtube.com/results?search_query="+encodeURIComponent(q)}
+function pyRes(py){
+  py=py.toLowerCase();
+  if(py.includes("postgres")||py.includes("sql")||py.includes("join"))return[{t:"📘 SQLBolt JOINs",u:"https://sqlbolt.com/"},{t:"▶ YT Telugu SQL",u:yt("sql telugu full course")}];
+  if(py.includes("fastapi")||py.includes("crud")||py.includes("validation")||py.includes("auth")||py.includes("postgres +")||py.includes("jwt")||py.includes("postman")||py.includes("pytest")||py.includes("security")||py.includes("requirements")||py.includes("deploy")||py.includes("/explain")||py.includes("api docs"))return[{t:"📘 FastAPI Tutorial",u:"https://fastapi.tiangolo.com/tutorial/"},{t:"▶ YT FastAPI English",u:yt("fastapi full course freecodecamp")}];
+  if(py.includes("react")||py.includes("vite")||py.includes("hook")||py.includes("cors")||py.includes("login page")||py.includes("router")||py.includes("e2e")||py.includes("pagination")||py.includes("admin"))return[{t:"📘 React Learn",u:"https://react.dev/learn"},{t:"▶ YT React Telugu",u:yt("react telugu full course")}];
+  if(py.includes("html")||py.includes("css")||py.includes("js ")||py.includes("dom")||py.includes("javascript"))return[{t:"📘 MDN JS",u:"https://developer.mozilla.org/en-US/docs/Web/JavaScript"},{t:"▶ YT HTML CSS JS Telugu",u:yt("html css javascript telugu")}];
+  if(py.includes("git")||py.includes("github")||py.includes("push")||py.includes("branch"))return[{t:"📘 Git Docs",u:"https://git-scm.com/doc"},{t:"▶ YT Git Telugu",u:yt("git github telugu")}];
+  return[{t:"📘 Python Tutorial",u:"https://docs.python.org/3/tutorial/"},{t:"▶ YT Python Telugu",u:yt("python telugu full course")}];
+}
+function dsaRes(dsa){
+  dsa=dsa.toLowerCase();
+  if(dsa.includes("binary search")||dsa.includes("search"))return[{t:"📘 GFG Binary Search",u:"https://www.geeksforgeeks.org/binary-search/"}];
+  if(dsa.includes("tree")||dsa.includes("graph")||dsa.includes("bfs"))return[{t:"▶ NeetCode Trees",u:"https://www.youtube.com/@NeetCode"}];
+  if(dsa.includes("stack")||dsa.includes("queue"))return[{t:"📘 GFG Stack",u:"https://www.geeksforgeeks.org/stack-data-structure/"}];
+  if(dsa.includes("sliding")||dsa.includes("two-pointer")||dsa.includes("two pointer"))return[{t:"▶ NeetCode Sliding",u:"https://www.youtube.com/@NeetCode"}];
+  if(dsa.includes("sort"))return[{t:"📘 GFG Sorting",u:"https://www.geeksforgeeks.org/sorting-algorithms/"}];
+  if(dsa.includes("linked"))return[{t:"📘 GFG Linked List",u:"https://www.geeksforgeeks.org/linked-list-data-structure/"}];
+  if(dsa.includes("recursion")||dsa.includes("backtrack")||dsa.includes("subset")||dsa.includes("permutation"))return[{t:"📘 GFG Recursion",u:"https://www.geeksforgeeks.org/recursion/"}];
+  if(dsa.includes("hash")||dsa.includes("two-sum")||dsa.includes("frequency"))return[{t:"📘 GFG HashMap",u:"https://www.geeksforgeeks.org/hashing-data-structure/"}];
+  return[{t:"📘 GFG DSA",u:"https://www.geeksforgeeks.org/learn-data-structures-and-algorithms-dsa-tutorial/"}];
+}
+function govtRes(govt){
+  govt=govt.toLowerCase();const out=[];
+  if(govt.includes("mock")){out.push({t:"📝 Testbook Free Mock",u:"https://testbook.com/"});out.push({t:"▶ YT Mock Analysis Telugu",u:yt("ssc bank mock analysis telugu")});return out}
+  if(govt.includes("pyq")){out.push({t:"📝 SSC PYQs",u:"https://ssc.gov.in/"});out.push({t:"📝 APPSC PYQs",u:"https://psc.ap.gov.in/"});return out}
+  if(govt.includes("banking")||govt.includes("budget")||govt.includes("rbi")||govt.includes("crr")){out.push({t:"📰 AffairsCloud Banking",u:"https://www.affairscloud.com/"});out.push({t:"▶ YT Banking Telugu",u:yt("banking awareness telugu ibps")});return out}
+  if(govt.includes("science")||govt.includes("physics")||govt.includes("chemistry")||govt.includes("biology")||govt.includes("vitamin")||govt.includes("rrb")){out.push({t:"📘 NCERT Science",u:"https://ncert.nic.in/textbook.php"});out.push({t:"▶ YT RRB Science Telugu",u:yt("rrb general science telugu")});return out}
+  if(govt.includes("ap:")||govt.includes("ap ")||govt.includes("bifurcation")||govt.includes("polavaram")||govt.includes("amaravati")||govt.includes("nadu-nedu")||govt.includes("satavahana")){out.push({t:"🏛️ APPSC Official",u:"https://psc.ap.gov.in/"});out.push({t:"▶ YT AP History Telugu",u:yt("ap history polity telugu appsc")});return out}
+  if(govt.includes("polity")||govt.includes("history")||govt.includes("geography")||govt.includes("economy")||govt.includes("static")||govt.includes("current")||govt.includes("ca ")||govt.includes("vocab")||govt.includes("english")||govt.includes("para")||govt.includes("error")||govt.includes("rc ")){}
+  out.push({t:"📊 IndiaBix Practice",u:"https://www.indiabix.com/"});out.push({t:"▶ YT Telugu Concept",u:yt(govt.slice(0,60)+" telugu")});return out;
+}
+function dayResources(p){
+  const r=[...govtRes(p.govt),...pyRes(p.py),...dsaRes(p.dsa),{t:"🧩 LeetCode Practice",u:"https://leetcode.com/problemset/"}];
+  if(p.ai && p.ai!=="—")r.push({t:"🤖 Gemini Free Key",u:"https://aistudio.google.com/"});
+  const seen=new Set();return r.filter(x=>{if(seen.has(x.u))return false;seen.add(x.u);return true}).slice(0,6);
+}
+
 function dayCard(p, open){
 const s=state[p.d];
 const summary=`<span class="small">${p.govt.slice(0,60)}… | ${state[p.d].status}</span>`;
 return `<details class="day" ${open?"open":""}><summary class="day-head" style="cursor:pointer;list-style:none"><div><span class="badge ${phaseClass(p.ph)}">${p.ph}</span> <b>Day ${p.d}</b> <span class="small">${p.done}</span><br/>${open?"":summary}</div><select data-k="status" data-d="${p.d}" style="border:1px solid var(--line);border-radius:8px;padding:6px;background:var(--card);color:var(--ink)" onclick="event.stopPropagation()" onchange="event.stopPropagation()">${["Pending","In Progress","Done","Skipped"].map(o=>`<option ${s.status===o?"selected":""}>${o}</option>`).join("")}</select></summary>
-<div class="day-body"><div><ul><li><b>Govt:</b> ${p.govt}</li><li><b>Python:</b> ${p.py}</li><li><b>DSA (${p.dn}):</b> ${p.dsa}</li><li><b>AI:</b> ${p.ai} | <b>Project:</b> ${p.proj}</li></ul><div class="toolbar"><button class="btn ghost" onclick="markDone(${p.d})">✅ Mark Done + Next</button></div></div>
+<div class="day-body"><div><ul><li><b>Govt:</b> ${p.govt}</li><li><b>Python:</b> ${p.py}</li><li><b>DSA (${p.dn}):</b> ${p.dsa}</li><li><b>AI:</b> ${p.ai} | <b>Project:</b> ${p.proj}</li></ul><div class="res"><b>🔗 Learn today:</b> ${dayResources(p).map(l=>`<a href="${l.u}" target="_blank">${l.t}</a>`).join(" • ")}</div><div class="toolbar"><button class="btn ghost" onclick="markDone(${p.d})">✅ Mark Done + Next</button><button class="btn ghost" onclick="window.open('${yt(p.govt.slice(0,50)+' telugu')}', '_blank')">▶ Govt YT</button><button class="btn ghost" onclick="window.open('${yt(p.py+' tutorial')}', '_blank')">▶ Code YT</button></div></div>
 <div class="inputs">
 <label>Actual hrs<input type="number" min="0" max="14" step="0.5" data-k="hrs" data-d="${p.d}" value="${s.hrs}"/></label>
 <label>Attempted<input type="number" min="0" data-k="att" data-d="${p.d}" value="${s.att}"/></label>

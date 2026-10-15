@@ -55,4 +55,7 @@ footer{padding:20px;text-align:center;color:var(--muted);font-size:12px}
 .theme-toggle{border:1px solid #ffffff44;background:#ffffff18;color:#fff;border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:700}
 .weekly-row{display:flex;align-items:center;gap:8px;margin:6px 0}
 .weekly-row .wlabel{width:56px;font-size:12px;color:var(--muted)}
+.res{background:var(--sub);border:1px dashed var(--line);border-radius:10px;padding:8px 10px;margin:8px 0;font-size:13px;line-height:1.7}
+.res a{display:inline-block;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:2px 9px;margin:2px;text-decoration:none;font-size:12px;font-weight:600}
+.res a:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
 @media print{header,.tabs,.toolbar,.btn,.theme-toggle{display:none}section.page{display:block}body{background:#fff;color:#000}}
