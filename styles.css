@@ -1,0 +1,58 @@
+:root{
+  --bg:#f6f7fb;--card:#fff;--ink:#1a2233;--muted:#667085;
+  --brand:#2f6bff;--green:#12a56b;--orange:#e8890c;--red:#e5484d;
+  --line:#e6e9f2;--radius:14px;--head:#0f1b3d;--sub:#f9fafd;--th:#f1f4fb;
+}
+body.dark{
+  --bg:#0f1420;--card:#1a2233;--ink:#eef2ff;--muted:#9aa3b8;
+  --brand:#5b8cff;--line:#2a3550;--head:#000;--sub:#141c30;--th:#141c30;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink);transition:background .2s,color .2s}
+header{position:sticky;top:0;z-index:20;background:var(--head);color:#fff;padding:14px 18px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+header h1{font-size:18px;margin:0}
+header p{margin:0;font-size:12px;opacity:.8}
+.wrap{max-width:1150px;margin:0 auto;padding:18px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.tabs button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 14px;border-radius:999px;cursor:pointer;font-weight:600}
+.tabs button.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.grid{display:grid;gap:12px}
+.stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+.stat b{font-size:22px;display:block}
+.stat span{font-size:12px;color:var(--muted)}
+.bar{height:10px;background:#2a355033;background:var(--line);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brand)}
+.phasebars{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:#eef2ff;color:#2f3a8f}
+body.dark .badge{color:#fff;background:#2a3550}
+.badge.p1{background:#e6f0ff}.badge.p2{background:#e9f9ef}.badge.p3{background:#fef3e2}.badge.p4{background:#fdecec}
+body.dark .badge.p1{background:#1e3a6e}body.dark .badge.p2{background:#14532d}body.dark .badge.p3{background:#6b4a12}body.dark .badge.p4{background:#6e1e1e}
+.day{border:1px solid var(--line);border-radius:12px;background:var(--card);margin-bottom:10px;overflow:hidden}
+.day-head{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--sub);flex-wrap:wrap}
+.day-body{padding:12px;display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
+@media(max-width:800px){.day-body{grid-template-columns:1fr}}
+ul{margin:6px 0 6px 18px;padding:0}
+li{margin:3px 0;font-size:14px}
+.inputs{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.inputs label{font-size:11px;color:var(--muted);display:grid;gap:4px}
+.inputs input,.inputs select,.inputs textarea{border:1px solid var(--line);border-radius:8px;padding:7px;font-size:13px;width:100%;background:var(--card);color:var(--ink)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.toolbar input,.toolbar select{border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--card);color:var(--ink)}
+.btn{border:0;border-radius:9px;padding:9px 13px;font-weight:700;cursor:pointer;background:var(--brand);color:#fff}
+.btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.green{background:var(--green)}.btn.orange{background:var(--orange)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{border:1px solid var(--line);padding:7px;text-align:left;vertical-align:top}
+th{background:var(--th)}
+a{color:var(--brand)}
+.small{font-size:12px;color:var(--muted)}
+section.page{display:none}
+section.page.active{display:block}
+.kbd{background:#eef2ff;border-radius:6px;padding:2px 6px;font-size:12px}
+body.dark .kbd{background:#2a3550;color:#fff}
+footer{padding:20px;text-align:center;color:var(--muted);font-size:12px}
+.theme-toggle{border:1px solid #ffffff44;background:#ffffff18;color:#fff;border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:700}
+.weekly-row{display:flex;align-items:center;gap:8px;margin:6px 0}
+.weekly-row .wlabel{width:56px;font-size:12px;color:var(--muted)}
+@media print{header,.tabs,.toolbar,.btn,.theme-toggle{display:none}section.page{display:block}body{background:#fff;color:#000}}

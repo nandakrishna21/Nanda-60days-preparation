@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>60-Day Govt Exam + Python + DSA + AI Dashboard</title>
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+<header>
+<div><h1>60-Day Dashboard — Govt Exam + Python Full-Stack + DSA + AI</h1><p>8–10 hrs • Full-time • Beginner • APPSC Gr2 + SSC CGL + Banking + RRB • Frontend-only, auto-saves</p></div>
+<div><button class="theme-toggle" id="themeBtn">🌙 Dark</button></div>
+</header>
+<div class="wrap">
+<div class="tabs" id="tabs">
+<button data-p="overview" class="active">Overview</button>
+<button data-p="tracker">60-Day Tracker</button>
+<button data-p="timetable">Timetable + Strategy</button>
+<button data-p="resources">Resources</button>
+<button data-p="mocks">Mocks + Project</button>
+</div>
+
+<section class="page active" id="p-overview">
+<div class="grid stats" id="stats"></div>
+<div class="card" style="margin-top:12px"><b>Overall progress</b><div class="bar" style="margin-top:8px"><i id="overallBar" style="width:0%"></i></div><div class="small" id="overallTxt" style="margin-top:6px"></div></div>
+<div class="phasebars" style="margin-top:12px" id="phaseBars"></div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:12px">
+<div class="card"><b>Weekly progress (NEW)</b><div id="weeklyChart" style="margin-top:8px"></div><div class="small">Top bar = Done days. Thin bar = hours vs best week. W1 1-7, W2 8-14, W3 15-21, W4 22-28, W5 29-35, W6 36-42, W7 43-49, W8 50-56, W9 57-60.</div></div>
+<div class="card"><b>Weekly mock scores</b><div id="mockChart" style="margin-top:8px"></div><div class="small">Enter Mock Score in Tracker → chart updates. Sundays 8am exam slot.</div></div>
+<div class="card"><b>Weak areas / Error notebook</b><div id="weakList" class="small" style="margin-top:8px"></div><div class="small" style="margin-top:8px">Rule: no new mock without clearing revisit dates (+3, +7, +14 days).</div></div>
+</div>
+<div class="card" style="margin-top:12px"><b>60-Day Map</b><ul><li><b>D1-14 Foundation:</b> Govt basics + Python OOP + Arrays → Mock1-2</li><li><b>D15-30 Core:</b> DI/Puzzles + FastAPI+DB+Auth + BS/Trees → Mock3-5</li><li><b>D31-45 Build:</b> Adv DI/Geo + React+Deploy + AI Explain → Mock6-8 v1.0 LIVE</li><li><b>D46-60 Final:</b> Only PYQ + 6 Mocks + Error Zero + Resume → Exam Ready</li><li>Daily: 5.5h Govt | 1.5h Python | 1h DSA | 0.5h AI | 0.75h Revise</li></ul></div>
+<div class="card" style="margin-top:12px"><b>How to use</b><ul><li>Tracker → update Status, hours, Qs daily 5:15pm. Auto-saves (localStorage).</li><li>Filters: Phase, Status, Search e.g. “DI” or “React”.</li><li>Export CSV weekly. Import to restore.</li><li>Files: <span class="kbd">index.html</span> + <span class="kbd">styles.css</span> + <span class="kbd">app.js</span> — keep all 3 together.</li></ul></div>
+</section>
+
+<section class="page" id="p-tracker">
+<div class="toolbar">
+<select id="fPhase"><option value="">All Phases</option><option>Phase 1 (1-14)</option><option>Phase 2 (15-30)</option><option>Phase 3 (31-45)</option><option>Phase 4 (46-60)</option></select>
+<select id="fStatus"><option value="">All Status</option><option>Pending</option><option>In Progress</option><option>Done</option><option>Skipped</option></select>
+<input id="fSearch" placeholder="Search e.g. DI, React, AP, Binary Search" style="flex:1;min-width:200px" />
+<button class="btn ghost" id="btnExportCSV">Export CSV</button>
+<button class="btn ghost" id="btnExportJSON">Export JSON</button>
+<button class="btn ghost" id="btnReset">Reset</button>
+<button class="btn" onclick="window.print()">Print</button>
+<label class="btn ghost" style="cursor:pointer">Import JSON<input type="file" id="importFile" accept=".json" hidden /></label>
+</div>
+<div class="small" id="countTxt"></div>
+<div id="days"></div>
+</section>
+
+<section class="page" id="p-timetable">
+<div class="card"><b>1. Strategy (exam in 2-3 months, 4 exams)</b><ul><li>75% common: Quant + Reasoning + English + GA/CA. 25% rotation: Mon/Thu AP, Tue/Fri Banking, Wed/Sat RRB Science.</li><li>Framework: <b>FastAPI first</b> — less magic, auto /docs, easy React + AI.</li><li>DSA: pattern &gt; count. 80-100 problems.</li><li>AI: Tue/Thu/Sat only. One <b>/explain</b> feature with Gemini free key.</li><li>Daily Q: 40 → 60 → 80-100. Weekly 1 mock Sunday 8am.</li></ul></div>
+<div class="card" style="margin-top:12px"><b>2. Daily timetable (9.2h)</b><table><tr><th>Time</th><th>Block</th></tr><tr><td>6:00-6:45</td><td>Exercise/Yoga</td></tr><tr><td>6:45-7:30</td><td>Breakfast + CA (AffairsCloud)</td></tr><tr><td>7:30-9:00</td><td><b>Quant</b> 30m + 30Q</td></tr><tr><td>9:15-10:45</td><td><b>Reasoning</b> + 30Q</td></tr><tr><td>11:00-12:00</td><td><b>English</b> + 20Q</td></tr><tr><td>12:00-1:00</td><td><b>GA/AP/Science</b> + 20Q</td></tr><tr><td>1:00-2:00</td><td>Lunch + 20m nap</td></tr><tr><td>2:00-3:30</td><td><b>Python</b> code</td></tr><tr><td>3:45-4:45</td><td><b>DSA</b> 2-3 probs</td></tr><tr><td>4:45-5:15</td><td><b>AI/Project</b> Tue/Thu/Sat</td></tr><tr><td>5:15-6:00</td><td>Revision + tracker</td></tr></table></div>
+<div class="card" style="margin-top:12px"><b>3. Catch-up</b><ul><li>1 day behind: Sat AI slot + Sun afternoon.</li><li>3 days behind: Light Mode — mocks+error only, Python 1h, DSA 3 easy.</li><li>Mock &lt;60%: next 2 days only weak topics.</li></ul></div>
+</section>
+
+<section class="page" id="p-resources">
+<div class="card"><b>Official syllabus</b><table><tr><th>Exam</th><th>Link</th></tr><tr><td>APPSC</td><td><a href="https://psc.ap.gov.in/" target="_blank">psc.ap.gov.in</a></td></tr><tr><td>SSC CGL Scheme</td><td><a href="https://ssc.gov.in/api/attachment/uploads/masterData/Static/CGL.pdf" target="_blank">CGL.pdf</a></td></tr><tr><td>SSC CGL 2026 Syllabus</td><td><a href="https://ssc.gov.in/syllabus/cgl-2026-syllabus.pdf" target="_blank">syllabus pdf</a></td></tr><tr><td>SSC Notice 2026</td><td><a href="https://ssc.gov.in/api/attachment/uploads/masterData/NoticeBoards/Notice_of_adv_cgl_2026.pdf" target="_blank">Notice</a></td></tr><tr><td>SSC Home</td><td><a href="https://ssc.gov.in/" target="_blank">ssc.gov.in</a></td></tr><tr><td>IBPS</td><td><a href="https://www.ibps.in/" target="_blank">ibps.in</a></td></tr><tr><td>SBI</td><td><a href="https://sbi.co.in/web/careers" target="_blank">sbi careers</a></td></tr><tr><td>RRB</td><td><a href="https://indianrailways.gov.in/" target="_blank">indianrailways</a> + <a href="https://www.rrbcdg.gov.in/" target="_blank">rrbcdg</a></td></tr></table></div>
+<div class="card" style="margin-top:12px"><b>Free practice</b><table><tr><th>Resource</th><th>Link</th><th>Use</th></tr><tr><td>IndiaBix</td><td><a href="https://www.indiabix.com/" target="_blank">indiabix</a></td><td>30Q/day</td></tr><tr><td>AffairsCloud</td><td><a href="https://www.affairscloud.com/" target="_blank">affairscloud</a></td><td>Daily CA</td></tr><tr><td>Testbook</td><td><a href="https://testbook.com/" target="_blank">testbook</a></td><td>Free mocks</td></tr><tr><td>NCERT</td><td><a href="https://ncert.nic.in/textbook.php" target="_blank">ncert</a></td><td>Polity/Science</td></tr><tr><td>Python Docs</td><td><a href="https://docs.python.org/3/tutorial/" target="_blank">python docs</a></td><td>Ch 3-9</td></tr><tr><td>CS50P</td><td><a href="https://cs50.harvard.edu/python/" target="_blank">cs50 python</a></td><td>Logic</td></tr><tr><td>SQLBolt</td><td><a href="https://sqlbolt.com/" target="_blank">sqlbolt</a></td><td>JOINs</td></tr><tr><td>Postgres</td><td><a href="https://www.postgresql.org/docs/current/tutorial.html" target="_blank">postgres tutorial</a></td><td>SELECT</td></tr><tr><td>FastAPI</td><td><a href="https://fastapi.tiangolo.com/tutorial/" target="_blank">fastapi</a></td><td>CRUD/Auth</td></tr><tr><td>React</td><td><a href="https://react.dev/learn" target="_blank">react.dev</a></td><td>Hooks/fetch</td></tr><tr><td>MDN JS</td><td><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">mdn</a></td><td>HTML/CSS/JS</td></tr><tr><td>GFG DSA</td><td><a href="https://www.geeksforgeeks.org/learn-data-structures-and-algorithms-dsa-tutorial/" target="_blank">gfg dsa</a></td><td>Theory</td></tr><tr><td>LeetCode</td><td><a href="https://leetcode.com/problemset/" target="_blank">leetcode</a></td><td>80+ solves</td></tr><tr><td>NeetCode</td><td><a href="https://neetcode.io/" target="_blank">neetcode</a></td><td>Patterns</td></tr><tr><td>Gemini API</td><td><a href="https://aistudio.google.com/" target="_blank">ai studio</a></td><td>free key</td></tr></table></div>
+</section>
+
+<section class="page" id="p-mocks">
+<div class="card"><b>Weekly mocks</b><table><tr><th>Week</th><th>Mock Sun 8am</th></tr><tr><td>1</td><td>Mock1 50Q Quant+Reas</td></tr><tr><td>2</td><td>Mock2 100Q SSC Tier1</td></tr><tr><td>3</td><td>Mock3 Bank Prelims</td></tr><tr><td>4</td><td>Mock4 APPSC Gr2</td></tr><tr><td>5</td><td>Mock5 SSC full</td></tr><tr><td>6</td><td>Mock6 Bank Mains</td></tr><tr><td>7</td><td>Mock7 RRB NTPC</td></tr><tr><td>8-9</td><td>Mock8 Mixed, 9 SSC 2026, 10 IBPS PO, 11 APPSC, 12 RRB, 13-14 sims</td></tr></table></div>
+<div class="card" style="margin-top:12px"><b>Project: PrepTrack</b><table><tr><th>Week</th><th>Milestone</th></tr><tr><td>1-2</td><td>CLI quiz + GitHub</td></tr><tr><td>3-4</td><td>FastAPI + Postgres /docs</td></tr><tr><td>5</td><td>JWT + React + CORS</td></tr><tr><td>6</td><td>Deploy Render+Vercel</td></tr><tr><td>7</td><td>/explain Gemini + pytest</td></tr><tr><td>8</td><td>README + demo video</td></tr></table></div>
+</section>
+
+<footer>Frontend-only • localStorage • Keep index.html + styles.css + app.js together</footer>
+</div>
+<script src="./app.js"></script>
+</body>
+</html>
